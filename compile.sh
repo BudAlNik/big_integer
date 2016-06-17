@@ -1,0 +1,1 @@
+g++ -Wall -Wextra -Wshadow -O2 -std=gnu++11 -I ./ -o big_integer_testing.exe big_integer_testing.cpp big_integer.cpp gtest/*
