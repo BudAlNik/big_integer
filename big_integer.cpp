@@ -5,8 +5,6 @@
 #include <algorithm>
 #include "big_integer.h"
 
-using namespace std;
-
 const big_integer TEN(10), ZERO(0);
 const uint64_t MASK = (((uint64_t) 1 << 32) - 1);
 
@@ -43,14 +41,14 @@ big_integer::big_integer(uint32_t num) {
     number = {num, 0};
 }
 
-big_integer::big_integer(vector<uint32_t> const& _number) {
+big_integer::big_integer(std::vector<uint32_t> const& _number) {
     number = _number;
     while (number.size() > 1 && number[number.size() - 2] == number.back()) {
         number.pop_back();
     }
 }
 
-big_integer::big_integer(string const& s) {
+big_integer::big_integer(std::string const& s) {
     number = {0};
     big_integer tp(1);
     bool sign = 0;
@@ -79,9 +77,9 @@ big_integer::big_integer(big_integer const& other) {
 
 void big_integer::print() const {
     for (auto num: number) {
-        cerr << num << " ";
+        std::cerr << num << " ";
     }
-    cerr << endl;
+    std::cerr << std::endl;
 }
 
 bool big_integer::get_sign() const {
@@ -94,7 +92,7 @@ size_t big_integer::size() const {
 
 uint32_t big_integer::operator[](size_t pos) const {
     //assert(number.size());
-    return number[min(pos, number.size() - 1)];
+    return number[std::min(pos, number.size() - 1)];
 }
 
 big_integer& big_integer::operator=(big_integer const& other) {
@@ -103,7 +101,7 @@ big_integer& big_integer::operator=(big_integer const& other) {
 }
 
 big_integer& big_integer::operator+=(big_integer const& rhs) {
-    vector<uint32_t> v;
+    std::vector<uint32_t> v;
     size_t c = 0;
     uint64_t now = 0;
     while (c <= size() || c <= rhs.size()) {
@@ -119,7 +117,7 @@ big_integer& big_integer::operator+=(big_integer const& rhs) {
 }
 
 big_integer& big_integer::operator-=(big_integer const& rhs) {
-    vector<uint32_t> v;
+    std::vector<uint32_t> v;
     size_t c = 0;
     uint64_t now = 0;
     while (c <= size() || c <= rhs.size()) {
@@ -148,7 +146,7 @@ big_integer& big_integer::operator*=(big_integer const& rhs) {
         b.negate();
     }
 
-    vector<pair<uint64_t, uint64_t>> v(size() + rhs.size() - 1);
+    std::vector<std::pair<uint64_t, uint64_t>> v(size() + rhs.size() - 1);
     for (size_t i = 0; i < a.size(); ++i) {
         for (size_t j = 0; j < b.size(); ++j) {
             uint64_t tmp = (uint64_t) a[i] * b[j];
@@ -158,7 +156,7 @@ big_integer& big_integer::operator*=(big_integer const& rhs) {
             }
         }
     }
-    number = vector<uint32_t>();
+    number = std::vector<uint32_t>();
     uint64_t now = 0;
     for (size_t i = 0; i < v.size(); ++i) {
         now += v[i].first;
@@ -188,7 +186,7 @@ big_integer& big_integer::operator/=(big_integer const& rhs) {
         return *this;
     }
 
-    vector<uint32_t> v(size() - b.size() + 2);
+    std::vector<uint32_t> v(size() - b.size() + 2);
     for (size_t i = size() - b.size(); ~i; --i) {
         uint64_t l = 0, r = (uint64_t) 1 << 32;
         while (r - l > 1) {
@@ -295,7 +293,7 @@ big_integer& big_integer::operator%=(big_integer const& rhs) {
 }
 
 big_integer& big_integer::operator&=(big_integer const& rhs) {
-    vector<uint32_t> v;
+    std::vector<uint32_t> v;
     size_t c = 0;
     while (c <= size() || c <= rhs.size()) {
         v.push_back(operator[](c) & rhs[c]);
@@ -307,7 +305,7 @@ big_integer& big_integer::operator&=(big_integer const& rhs) {
 }
 
 big_integer& big_integer::operator|=(big_integer const& rhs) {
-    vector<uint32_t> v;
+    std::vector<uint32_t> v;
     size_t c = 0;
     while (c <= size() || c <= rhs.size()) {
         v.push_back(operator[](c) | rhs[c]);
@@ -319,7 +317,7 @@ big_integer& big_integer::operator|=(big_integer const& rhs) {
 }
 
 big_integer& big_integer::operator^=(big_integer const& rhs) {
-    vector<uint32_t> v;
+    std::vector<uint32_t> v;
     size_t c = 0;
     while (c <= size() || c <= rhs.size()) {
         v.push_back(operator[](c) ^ rhs[c]);
@@ -333,7 +331,7 @@ big_integer& big_integer::operator^=(big_integer const& rhs) {
 big_integer& big_integer::operator<<=(int rhs) {
     int d = rhs % 32;
     int tot = rhs / 32;
-    vector<uint32_t> v;
+    std::vector<uint32_t> v;
     for (int i = 0; i < tot; ++i) {
         v.push_back(0);
     }
@@ -353,7 +351,7 @@ big_integer& big_integer::operator<<=(int rhs) {
 big_integer& big_integer::operator>>=(int rhs) {
     int d = rhs % 32;
     int tot = rhs / 32;
-    vector<uint32_t> v;
+    std::vector<uint32_t> v;
     size_t c = tot;
     do {
         uint32_t tmp = (operator[](c) >> d) | (operator[](c + 1) << (32 - d));
@@ -377,7 +375,7 @@ big_integer big_integer::operator-() const {
 }
 
 big_integer big_integer::operator~() const {
-    vector<uint32_t> v;
+    std::vector<uint32_t> v;
     for (size_t i = 0; i < size(); ++i) {
         v.push_back(~number[i]);
     }
@@ -486,7 +484,7 @@ big_integer operator>>(big_integer a, int b) {
 
 std::string to_string(big_integer const& a) {
     big_integer tmp = a;
-    string ret = "";
+    std::string ret = "";
     bool sign = 0;
     if (tmp < ZERO) {
         tmp = -tmp;
@@ -518,8 +516,6 @@ int main() {
     big_integer b("100000000000000000000000000000000000");
 
     big_integer c = a / b;
-
-    cout << c << endl;
 
     return 0;
 }*/

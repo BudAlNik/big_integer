@@ -4,11 +4,9 @@
 #include <iosfwd>
 #include <vector>
 
-using namespace std;
-
 struct big_integer {
 private:
-    vector<uint32_t> number;
+    std::vector<uint32_t> number;
     void normalize();
     void negate();
     
@@ -16,8 +14,8 @@ public:
     big_integer();
     big_integer(int num);
     big_integer(uint32_t num);
-    big_integer(vector<uint32_t> const& _number);
-    explicit big_integer(string const& s);
+    big_integer(std::vector<uint32_t> const& _number);
+    explicit big_integer(std::string const& s);
 
     ~big_integer();
     
